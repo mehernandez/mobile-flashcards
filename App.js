@@ -2,8 +2,19 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { Header, Card, Button } from 'react-native-elements';
 import ActionButton from 'react-native-action-button';
+import { get_decks, new_deck } from './storage.js';
 
 export default class App extends React.Component {
+
+  constructor(props) {
+
+    super(props);
+    this.state = { decks: [] };
+  }
+
+  componentDidMount() {
+    get_decks().then((items) => this.setState({ decks: items }));
+  }
 
   render() {
 
@@ -16,14 +27,14 @@ export default class App extends React.Component {
         />
         <FlatList
           style={{ flex: 1 }}
-          data={decks}
+          data={this.state.decks}
           ListHeaderComponent={<Text style={styles.listTitle}>Decks</Text>}
           ListEmptyComponent={<Text>No decks yet</Text>}
           renderItem={({ item }) =>
             (
               <TouchableOpacity
-                onPress={() => alert(item)}>
-                <Card title={item.name}>
+                onPress={() => get_decks()}>
+                <Card title={item.key}>
                   <Text>{item.card_count} cards</Text>
                 </Card>
               </TouchableOpacity>
@@ -31,7 +42,7 @@ export default class App extends React.Component {
         />
         <ActionButton
           buttonColor="rgba(231,76,60,1)"
-          onPress={() => { alert("Add deck") }}
+          onPress={() => { new_deck("hi") }}
         />
       </View>
     );
