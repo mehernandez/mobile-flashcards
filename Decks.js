@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { Card, Button } from 'react-native-elements';
 import ActionButton from 'react-native-action-button';
-import { get_decks, new_deck } from './storage.js';
+import { get_decks, new_deck, clear_all } from './storage.js';
 
 export default class App extends React.Component {
 
@@ -14,14 +14,14 @@ export default class App extends React.Component {
 
     super(props);
     this.state = { decks: [] };
+    this.getDecks = () => {
+      get_decks().then((items) => this.setState({ decks: items }));
+    }
+    //clear_all();
   }
 
   componentDidMount() {
-    get_decks().then((items) => this.setState({ decks: items }));
-  }
-
-  componentDidUpdate() {
-    get_decks().then((items) => this.setState({ decks: items }));
+    this.getDecks()
   }
 
   render() {
@@ -39,16 +39,16 @@ export default class App extends React.Component {
           renderItem={({ item }) =>
             (
               <TouchableOpacity
-                onPress={() => get_decks()}>
+                onPress={() => navigate('Deck', { item: item, update: this.getDecks })}>
                 <Card title={item.key}>
-                  <Text>{item.card_count} cards</Text>
+                  <Text>{item.questions.length} cards</Text>
                 </Card>
               </TouchableOpacity>
             )}
         />
         <ActionButton
           buttonColor="rgba(231,76,60,1)"
-          onPress={() => navigate('NewDeck')}
+          onPress={() => navigate('NewDeck', { update: this.getDecks })}
         />
       </View>
     );

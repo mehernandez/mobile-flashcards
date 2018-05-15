@@ -8,7 +8,7 @@ let get_decks = async () => {
 
             const des = await AsyncStorage.multiGet(decks);
 
-            let de = des.map((item)=>{
+            let de = des.map((item) => {
                 return JSON.parse(item[1]);
             });
 
@@ -24,10 +24,10 @@ let get_decks = async () => {
 
 }
 
-// Save new deck
+// Create new deck
 let new_deck = async (title) => {
     try {
-        await AsyncStorage.mergeItem(title, JSON.stringify({key: title, card_count: 0}));
+        await AsyncStorage.mergeItem(title, JSON.stringify({ key: title, questions: [] }));
 
         return true;
     } catch (error) {
@@ -39,10 +39,22 @@ let new_deck = async (title) => {
 
 // Get deck
 let get_deck = async (title) => {
+    console.log("Getting deck");
     try {
-        await AsyncStorage.setItem(title, JSON.stringify({key: title, card_count: 0}));
-        console.log("Inserted");
-        
+        const des = await AsyncStorage.getItem(title);
+        return JSON.parse(des);
+    } catch (error) {
+        console.log(error);
+        return { key: title, questions: [] };
+    }
+
+}
+
+// Create new card
+let new_card = async (key, questions) => {
+    try {
+        await AsyncStorage.mergeItem(key, JSON.stringify({ questions }));
+
         return true;
     } catch (error) {
         console.log(error);
@@ -51,4 +63,15 @@ let get_deck = async (title) => {
 
 }
 
-export { get_decks, new_deck };
+// Clear all data
+let clear_all = async () => {
+    try {
+        await AsyncStorage.clear();
+        return true;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+export { get_decks, new_deck, new_card, clear_all, get_deck };
