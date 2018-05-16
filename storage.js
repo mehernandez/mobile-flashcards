@@ -1,4 +1,7 @@
 import { AsyncStorage } from 'react-native';
+import { Notifications, Permissions } from 'expo';
+
+const NOTIFICATION_KEY = 'Udacicards:notifications';
 
 // Get decks
 let get_decks = async () => {
@@ -74,4 +77,61 @@ let clear_all = async () => {
     }
 }
 
-export { get_decks, new_deck, new_card, clear_all, get_deck };
+// Notification functions 
+
+// Clear notifications
+export function clearLocalNotification(){
+    return AsyncStorage.removeItem(NOTIFICATION_KEY).then(Notifications.cancelAllScheduledNotificationsAsync)
+}
+
+// Create a new notification
+export function createNotification(){
+    return {
+        title: 'You need to practice',
+        body: "We don't have records of you practicing since yesterday",
+        ios: {
+            sound: true,
+            priority: 'high',
+            sticky: false,
+            vibrate: true
+        },
+        android: {
+            sound: true,
+            priority: 'high',
+            sticky: false,
+            vibrate: true
+        }
+    }
+}
+
+// Set a new notification
+export function setLocalNotification(){
+    AsyncStorage.getItem(NOTIFICATION_KEY).then(JSON.parse).then((data) => {
+        if (data === null){
+            Permissions.askAsync(Permissions.NOTIFICATIONS).then(({status}) => {
+                if(status === 'granted'){
+                    Notifications.cancelAllScheduledNotificationsAsync();
+
+                    let tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    tomorrow.setHours(8);
+                    tomorrow.setMinutes(0);
+
+                    Notifications.scheduleLocalNotificationAsync(
+                        createNotification(),
+                        {
+                            time: tomorrow,
+                            repeat: 'day'
+                        }
+                    )
+
+                    AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true));
+
+                }
+            })
+        }
+    })
+}
+
+
+export { get_decks, new_deck, new_card, clear_all, get_deck, clearLocalNotification, setLocalNotification };

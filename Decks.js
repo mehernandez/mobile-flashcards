@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { Card, Button } from 'react-native-elements';
 import ActionButton from 'react-native-action-button';
-import { get_decks, new_deck, clear_all } from './storage.js';
+import { get_decks, new_deck, clear_all, setLocalNotification } from './storage.js';
 
 export default class App extends React.Component {
 
@@ -21,7 +21,8 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    this.getDecks()
+    this.getDecks();
+    setLocalNotification();
   }
 
   render() {

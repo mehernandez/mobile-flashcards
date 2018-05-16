@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { Button } from 'react-native-elements';
-import { get_deck } from './storage.js';
+import { get_deck, clearLocalNotification, setLocalNotification } from './storage.js';
 
 export default class Deck extends React.Component {
 
@@ -15,12 +15,12 @@ export default class Deck extends React.Component {
 
     const { state } = this.props.navigation;
     this.state = { item: state.params.item, question: '', answer: '' };
-    this.getDeck = () =>{
+    this.getDeck = () => {
       get_deck(this.state.item.key).then((item) => this.setState({ item: item }));
     }
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.props.navigation.state.params.update();
   }
 
@@ -34,9 +34,9 @@ export default class Deck extends React.Component {
 
         <Text>
           {this.state.item.key}
-          </Text>
+        </Text>
         <Text
-        style={styles.textTitle}>
+          style={styles.textTitle}>
           {this.state.item.questions.length} cards
           </Text>
         <Button
@@ -46,7 +46,15 @@ export default class Deck extends React.Component {
         />
         <Button
           title='Start quiz'
-          onPress={() => navigate('Quiz', { questions: this.state.item.questions })}
+          onPress={() => {
+            if (this.state.item.questions.length > 0) {
+              clearLocalNotification().then(setLocalNotification);
+
+              navigate('Quiz', { questions: this.state.item.questions })
+            } else {
+              alert('This deck has no cards');
+            }
+          }}
           containerStyle={styles.button}
         />
       </View>
