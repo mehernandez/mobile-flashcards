@@ -7,7 +7,7 @@ import { get_decks, new_deck, clear_all, setLocalNotification } from './storage.
 export default class App extends React.Component {
 
   static navigationOptions = {
-    title: 'Decks',
+    title: 'Udacicards',
   };
 
   constructor(props) {
@@ -36,7 +36,7 @@ export default class App extends React.Component {
           style={{ flex: 1 }}
           data={this.state.decks}
           ListHeaderComponent={<Text style={styles.listTitle}>Decks</Text>}
-          ListEmptyComponent={<Text>No decks yet</Text>}
+          ListEmptyComponent={<Text style={styles.empty}>You don't have decks yet, let's add some!</Text>}
           renderItem={({ item }) =>
             (
               <TouchableOpacity
@@ -65,6 +65,11 @@ const styles = StyleSheet.create({
     padding: 20,
     fontSize: 20,
     fontWeight: 'bold',
+    color: '#545454'
+  },
+  empty: {
+    padding: 20,
+    fontSize: 10,
     color: '#545454'
   }
 });

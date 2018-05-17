@@ -6,7 +6,15 @@ const NOTIFICATION_KEY = 'Udacicards:notifications';
 // Get decks
 let get_decks = async () => {
     try {
-        const decks = await AsyncStorage.getAllKeys();
+        let decks = await AsyncStorage.getAllKeys();
+        decks = decks.filter((item)=>{
+            if (item === 'Udacicards:notifications'){
+                return false;
+            }else{
+                return true;
+            }
+        })
+
         if (decks.length > 0) {
 
             const des = await AsyncStorage.multiGet(decks);
@@ -42,7 +50,6 @@ let new_deck = async (title) => {
 
 // Get deck
 let get_deck = async (title) => {
-    console.log("Getting deck");
     try {
         const des = await AsyncStorage.getItem(title);
         return JSON.parse(des);
@@ -80,12 +87,12 @@ let clear_all = async () => {
 // Notification functions 
 
 // Clear notifications
-export function clearLocalNotification(){
+function clearLocalNotification(){
     return AsyncStorage.removeItem(NOTIFICATION_KEY).then(Notifications.cancelAllScheduledNotificationsAsync)
 }
 
 // Create a new notification
-export function createNotification(){
+function createNotification(){
     return {
         title: 'You need to practice',
         body: "We don't have records of you practicing since yesterday",
@@ -105,7 +112,7 @@ export function createNotification(){
 }
 
 // Set a new notification
-export function setLocalNotification(){
+function setLocalNotification(){
     AsyncStorage.getItem(NOTIFICATION_KEY).then(JSON.parse).then((data) => {
         if (data === null){
             Permissions.askAsync(Permissions.NOTIFICATIONS).then(({status}) => {

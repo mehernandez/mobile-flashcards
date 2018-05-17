@@ -77,17 +77,29 @@ export default class Quiz extends React.Component {
           <View>
             <Text
               style={styles.textTitle}>
-              You got {this.state.right} of {this.state.questions.lenght} right!
+              You got {this.state.right} of {this.state.questions.length} answers right!
           </Text>
+          <Button
+              title='Restart quiz'
+              onPress={() => this.setState({question: true, number: 0, right: 0})}
+              containerStyle={styles.button}
+            />
             <Button
-              title='Finish'
+              title='Back to deck'
               onPress={() => goBack()}
               containerStyle={styles.button}
             />
           </View>
         )
       } else {
-        return <Option />
+        return (
+          <View>
+            <Text>
+              {this.state.number}/{this.state.questions.length}
+              </Text>
+            <Option />
+            <Correctness />
+          </View>);
       }
     }
 
