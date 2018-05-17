@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Animated } from 'react-native';
 import { Card, Button } from 'react-native-elements';
 import ActionButton from 'react-native-action-button';
 import { get_decks, new_deck, clear_all, setLocalNotification } from './storage.js';
@@ -13,7 +13,9 @@ export default class App extends React.Component {
   constructor(props) {
 
     super(props);
-    this.state = { decks: [] };
+    this.state = { 
+      decks: [],
+      fadeAnim: new Animated.Value(1)};
     this.getDecks = () => {
       get_decks().then((items) => this.setState({ decks: items }));
     }
@@ -39,12 +41,34 @@ export default class App extends React.Component {
           ListEmptyComponent={<Text style={styles.empty}>You don't have decks yet, let's add some!</Text>}
           renderItem={({ item }) =>
             (
+              <Animated.View 
+              style={{opacity: this.state.fadeAnim}}>
               <TouchableOpacity
-                onPress={() => navigate('Deck', { item: item, update: this.getDecks })}>
+                onPress={() => {
+                  Animated.timing(
+                    this.state.fadeAnim,
+                    {
+                      toValue: 0,
+                      duration: 600,
+                    }
+                  ).start(()=>{
+                    Animated.timing(
+                      this.state.fadeAnim,
+                      {
+                        toValue: 1,
+                        duration: 600,
+                      }
+                    ).start(()=>{
+                      navigate('Deck', { item: item, update: this.getDecks });
+                    });
+                  });   
+                }}>
+
                 <Card title={item.key}>
                   <Text>{item.questions.length} cards</Text>
                 </Card>
               </TouchableOpacity>
+              </Animated.View>
             )}
         />
         <ActionButton
