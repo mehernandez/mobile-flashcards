@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
-import { Button } from 'react-native-elements';
+import { StyleSheet, View, TextInput, Text, TouchableOpacity } from 'react-native';
 import { new_card } from './storage.js';
 
 export default class NewCard extends React.Component {
@@ -23,7 +22,7 @@ export default class NewCard extends React.Component {
 
     return (
       <View style={styles.container}>
-
+       <View style={{flex: 1, justifyContent: 'space-around'}}>
         <TextInput
           placeholder='Question'
           onChangeText={(question) => this.setState({ question })}
@@ -36,17 +35,25 @@ export default class NewCard extends React.Component {
           value={this.state.text}
           style={styles.textInput}
         />
-        <Button
-          title='Create card'
+        </View>
+        <View style={{flex:1, justifyContent: 'center'}}>
+        <TouchableOpacity
+          style={styles.button}
           onPress={() => {
+            if(this.state.question && this.state.answer){
             let quest = this.state.item.questions;
             quest.push({ question: this.state.question, answer: this.state.answer });
             new_card(this.state.item.key, quest);
             state.params.update();
             goBack();
+            }
           }}
-          containerStyle={styles.button}
-        />
+        >
+          <Text style={styles.buttonText}>
+          Create card
+          </Text>
+        </TouchableOpacity>
+</View>
       </View>
     );
   }
@@ -60,10 +67,21 @@ const styles = StyleSheet.create({
   },
   textInput: {
     height: 60,
+    margin: 20,
     padding: 20,
-    backgroundColor: 'gray'
+    borderRadius: 10,
+    color: 'white',
+    backgroundColor: '#bfbfbf'
   },
   button: {
-    height: 60
+    height: 60,
+    borderRadius: 50,
+    margin: 20,
+    backgroundColor: '#00cc00'
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    paddingTop: 20
   }
 });
