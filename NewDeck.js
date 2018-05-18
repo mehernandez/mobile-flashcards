@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
-import { Button } from 'react-native-elements';
+import { StyleSheet, View, TextInput, TouchableOpacity, Text } from 'react-native';
 import { new_deck } from './storage.js';
 
 export default class NewDeck extends React.Component {
@@ -23,20 +22,25 @@ export default class NewDeck extends React.Component {
       <View style={styles.container}>
 
         <TextInput
-          placeholder='Write name here ...'
+          placeholder='Write the new deck name here ...'
           onChangeText={(text) => this.setState({ text })}
           value={this.state.text}
           style={styles.textInput}
         />
-        <Button
-          title='Create deck'
+        <TouchableOpacity
           onPress={() => {
-            new_deck(this.state.text);
-            state.params.update();
-            goBack();
+            if (this.state.text) {
+              new_deck(this.state.text);
+              state.params.update();
+              goBack();
+            }
           }}
-          containerStyle={styles.button}
-        />
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>
+            Create deck
+        </Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -46,14 +50,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'space-around'
   },
   textInput: {
     height: 60,
+    margin: 20,
     padding: 20,
-    backgroundColor: 'gray'
+    borderRadius: 10,
+    color: 'white',
+    backgroundColor: '#bfbfbf'
   },
   button: {
-    height: 60
+    height: 60,
+    borderRadius: 50,
+    margin: 20,
+    backgroundColor: '#00cc00'
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    paddingTop: 20
   }
 });
