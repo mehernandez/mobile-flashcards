@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { Button } from 'react-native-elements';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import {clearLocalNotification, setLocalNotification} from './storage.js'
 
 export default class Quiz extends React.Component {
 
@@ -24,17 +24,23 @@ export default class Quiz extends React.Component {
 
     let Correctness = (props) => {
       return (
-        <View>
-          <Button
-            title='Correct'
+        <View style={{ flex: 1, justifyContent: 'space-around' }}>
+          <TouchableOpacity
+            style={styles.button1}
             onPress={() => this.setState({ number: this.state.number + 1, right: this.state.right + 1 })}
-            containerStyle={styles.button}
-          />
-          <Button
-            title='Incorrect'
+          >
+            <Text style={styles.buttonText}>
+              Correct
+        </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button2}
             onPress={() => this.setState({ number: this.state.number + 1 })}
-            containerStyle={styles.button}
-          />
+          >
+            <Text style={styles.buttonText}>
+              Incorrect
+          </Text>
+          </TouchableOpacity>
         </View>
       )
     }
@@ -42,30 +48,36 @@ export default class Quiz extends React.Component {
     let Option = (props) => {
       if (this.state.question) {
         return (
-          <View>
+          <View style={{ flex: 1, justifyContent: 'space-around' }}>
             <Text
               style={styles.textTitle}>
               {it.question}
             </Text>
-            <Button
-              title='Answer'
+            <TouchableOpacity
               onPress={() => this.setState({ question: false })}
-              containerStyle={styles.button}
-            />
+            >
+              <Text style={{ color: 'red', textAlign: 'center', fontSize: 20 }}>
+                Answer
+            </Text>
+            </TouchableOpacity>
           </View>
         )
       } else {
         return (
-          <View>
+          <View style={{ flex: 1, justifyContent: 'space-around' }}>
             <Text
               style={styles.textTitle}>
               {it.answer}
             </Text>
-            <Button
+            <TouchableOpacity
               title='Question'
               onPress={() => this.setState({ question: true })}
               containerStyle={styles.button}
-            />
+            >
+              <Text style={{ color: 'red', textAlign: 'center', fontSize: 20 }}>
+                Question
+            </Text>
+            </TouchableOpacity>
           </View>
         )
       }
@@ -73,30 +85,40 @@ export default class Quiz extends React.Component {
 
     let Full = (props) => {
       if (this.state.number == this.state.questions.length) {
+        clearLocalNotification().then(setLocalNotification);
         return (
-          <View>
+          <View style={{ flex: 1, justifyContent: 'space-around' }}>
             <Text
               style={styles.textTitle}>
               You got {this.state.right} of {this.state.questions.length} answers right!
           </Text>
-          <Button
-              title='Restart quiz'
-              onPress={() => this.setState({question: true, number: 0, right: 0})}
-              containerStyle={styles.button}
-            />
-            <Button
-              title='Back to deck'
-              onPress={() => goBack()}
-              containerStyle={styles.button}
-            />
+            <View style={{ justifyContent: 'space-around' , flex: 0.4}}>
+              <TouchableOpacity
+                style={styles.button1}
+                title='Restart quiz'
+                onPress={() => this.setState({ question: true, number: 0, right: 0 })}
+              >
+                <Text style={styles.buttonText}>
+                  Restart quiz
+          </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button2}
+                onPress={() => goBack()}
+              >
+                <Text style={styles.buttonText}>
+                  Back to deck
+            </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )
       } else {
         return (
-          <View>
-            <Text>
+          <View style={{ flex: 1, justifyContent: 'space-around' }}>
+            <Text style={{ flex: 0.5, fontWeight: 'bold', padding: 10 }}>
               {this.state.number}/{this.state.questions.length}
-              </Text>
+            </Text>
             <Option />
             <Correctness />
           </View>);
@@ -120,10 +142,25 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   textTitle: {
-    height: 60,
-    padding: 20
+    fontSize: 30,
+    textAlign: 'center',
+    fontWeight: 'bold'
   },
-  button: {
-    height: 60
+  button1: {
+    height: 60,
+    borderRadius: 50,
+    margin: 20,
+    backgroundColor: '#4c4cff'
+  },
+  button2: {
+    height: 60,
+    borderRadius: 50,
+    margin: 20,
+    backgroundColor: '#ff4c4c'
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    paddingTop: 20
   }
 });

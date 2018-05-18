@@ -1,3 +1,10 @@
+## Mobile flashcards
+
+This is a mobile application developed with React Native to help you study for your exams, just add as many decks and flashcards as you want, test yourself and have fun!.
+
+
+## Instructions 
+
 This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
 
 Below you'll find information about performing common tasks. The most recent version of this guide is available [here](https://github.com/react-community/create-react-native-app/blob/master/react-native-scripts/template/README.md).

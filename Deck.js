@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { get_deck, clearLocalNotification, setLocalNotification } from './storage.js';
+import { get_deck } from './storage.js';
 
 export default class Deck extends React.Component {
 
@@ -52,7 +52,6 @@ export default class Deck extends React.Component {
             style={styles.button2}
             onPress={() => {
               if (this.state.item.questions.length > 0) {
-                clearLocalNotification().then(setLocalNotification);
 
                 navigate('Quiz', { questions: this.state.item.questions })
               } else {
