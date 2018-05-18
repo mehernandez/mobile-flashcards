@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { Button } from 'react-native-elements';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { get_deck, clearLocalNotification, setLocalNotification } from './storage.js';
 
 export default class Deck extends React.Component {
@@ -31,32 +30,41 @@ export default class Deck extends React.Component {
 
     return (
       <View style={styles.container}>
-
-        <Text>
-          {this.state.item.key}
-        </Text>
-        <Text
-          style={styles.textTitle}>
-          {this.state.item.questions.length} cards
+        <View style={{ flex: 2, justifyContent: 'center' }}>
+          <Text style={styles.textTitle}>
+            {this.state.item.key}
           </Text>
-        <Button
-          title='Add card'
-          onPress={() => navigate('NewCard', { item: this.state.item, update: this.getDeck })}
-          containerStyle={styles.button}
-        />
-        <Button
-          title='Start quiz'
-          onPress={() => {
-            if (this.state.item.questions.length > 0) {
-              clearLocalNotification().then(setLocalNotification);
+          <Text
+            style={styles.textCards}>
+            {this.state.item.questions.length} cards
+          </Text>
+        </View>
+        <View style={{ justifyContent: 'space-around', flex: 1 }}>
+          <TouchableOpacity
+            style={styles.button1}
+            onPress={() => navigate('NewCard', { item: this.state.item, update: this.getDeck })}
+          >
+            <Text style={styles.buttonText}>
+              Add card
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button2}
+            onPress={() => {
+              if (this.state.item.questions.length > 0) {
+                clearLocalNotification().then(setLocalNotification);
 
-              navigate('Quiz', { questions: this.state.item.questions })
-            } else {
-              alert('This deck has no cards');
-            }
-          }}
-          containerStyle={styles.button}
-        />
+                navigate('Quiz', { questions: this.state.item.questions })
+              } else {
+                alert('This deck has no cards');
+              }
+            }}
+          >
+            <Text style={styles.buttonText}>
+              Start quiz
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -69,10 +77,31 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   textTitle: {
-    height: 60,
-    padding: 20
+    fontWeight: 'bold',
+    fontSize: 35,
+    padding: 5,
+    textAlign: 'center'
   },
-  button: {
-    height: 60
+  textCards: {
+    fontSize: 20,
+    padding: 5,
+    textAlign: 'center'
+  },
+  button1: {
+    height: 60,
+    borderRadius: 50,
+    margin: 20,
+    backgroundColor: '#4c4cff'
+  },
+  button2: {
+    height: 60,
+    borderRadius: 50,
+    margin: 20,
+    backgroundColor: '#ff4c4c'
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    paddingTop: 20
   }
 });

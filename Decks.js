@@ -49,14 +49,14 @@ export default class App extends React.Component {
                     this.state.fadeAnim,
                     {
                       toValue: 0,
-                      duration: 600,
+                      duration: 400,
                     }
                   ).start(()=>{
                     Animated.timing(
                       this.state.fadeAnim,
                       {
                         toValue: 1,
-                        duration: 600,
+                        duration: 400,
                       }
                     ).start(()=>{
                       navigate('Deck', { item: item, update: this.getDecks });
